@@ -1,22 +1,14 @@
 package day1
 
 import (
-	"bufio"
+	"aoc/2023/common"
 	"fmt"
-	"log"
-	"os"
 	"strconv"
 	"unicode"
 )
 
-func Day1(filename string) int {
-	f, err := os.Open(filename)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer f.Close()
-
-	scanner := bufio.NewScanner(f)
+func Part1(filename string) int {
+	scanner := common.FileBuffer(filename)
 
 	var sum int = 0
 
@@ -31,12 +23,23 @@ func Day1(filename string) int {
 
 		// combine first and last charcter number to int
 		num, _ := strconv.Atoi(string(numbers[0]) + string(numbers[len(numbers)-1]))
-		if err != nil {
-			panic(err)
-		}
 		sum += num
 	}
 
 	fmt.Printf("Sum = %d", sum)
+	return sum
+}
+
+func Part2(filename string) int {
+	scanner := common.FileBuffer(filename)
+
+	var sum int = 0
+
+	for scanner.Scan() {
+		// loop over line and retrieve numbers
+
+		
+	}
+
 	return sum
 }
