@@ -80,7 +80,7 @@ func Part2(filename string) int {
 		}
 		// combine first and last combinedNum and add to sum
 		combinedNum, _ := strconv.Atoi(fmt.Sprint(Word2Num[numFirst]) + fmt.Sprint(Word2Num[numLast]))
-		fmt.Println(line, Word2Num[numFirst], Word2Num[numLast], combinedNum)
+		// fmt.Println(line, Word2Num[numFirst], Word2Num[numLast], combinedNum)
 		sum += combinedNum
 	}
 
