@@ -3,6 +3,7 @@ package main
 import (
 	"aoc/2023/day1"
 	"aoc/2023/day2"
+	"aoc/2023/day3"
 	"flag"
 	"fmt"
 )
@@ -21,6 +22,8 @@ func main() {
 	case 2:
 		day2.Part1(file_name)
 		day2.Part2(file_name)
+	case 3:
+		day3.Part1(file_name)
+		// day3.Part2(file_name)
 	}
-
 }
