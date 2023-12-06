@@ -4,6 +4,8 @@ import (
 	"aoc/2023/day1"
 	"aoc/2023/day2"
 	"aoc/2023/day3"
+	"aoc/2023/day4"
+	"aoc/2023/day5"
 	"flag"
 	"fmt"
 	"html/template"
@@ -21,7 +23,7 @@ func writeTemplate(pathTemplate string, output string, day int) {
 		panic(err)
 	}
 	defer f.Close()
-	
+
 	err = t.Execute(f, day)
 	if err != nil {
 		panic(err)
@@ -39,16 +41,16 @@ func createNewDay(day int) {
 	writeTemplate("dayTemplate/day.tmpl", fmt.Sprintf("day%d/day%d.go", day, day), day)
 
 	// create input and sample file
-    f, err := os.Create(fmt.Sprintf("inputs/day%d.txt", day))
-    if err != nil {
+	f, err := os.Create(fmt.Sprintf("inputs/day%d.txt", day))
+	if err != nil {
 		panic(err)
-    }
-    defer f.Close()
-    f2, err := os.Create(fmt.Sprintf("samples/day%d.txt", day))
-    if err != nil {
+	}
+	defer f.Close()
+	f2, err := os.Create(fmt.Sprintf("samples/day%d.txt", day))
+	if err != nil {
 		panic(err)
-    }
-    defer f2.Close()
+	}
+	defer f2.Close()
 }
 
 func main() {
@@ -75,6 +77,12 @@ func main() {
 	case 3:
 		day3.Part1(file_name)
 		day3.Part2(file_name)
+	case 4:
+		day4.Part1(file_name)
+		day4.Part2(file_name)
+	case 5:
+		day5.Part1(file_name)
+		day5.Part2(file_name)
 
 	}
 }
