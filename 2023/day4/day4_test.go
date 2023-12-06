@@ -1,4 +1,4 @@
-package day
+package day4
 
 import (
 	"fmt"
@@ -6,7 +6,7 @@ import (
 )
 
 func TestPart1(t *testing.T) {
-	var sum = Part1("../samples/day2.txt")
+	var sum = Part1("../samples/day4.txt")
 	var expected = 0
 	if sum != expected {
 		t.Errorf("Wrong output %d != %d", expected, sum)
@@ -14,7 +14,7 @@ func TestPart1(t *testing.T) {
 }
 
 func TestPart2(t *testing.T) {
-	var sum = Part2("../samples/day2.txt")
+	var sum = Part2("../samples/day4.txt")
 	fmt.Print(sum)
 	var expected = 0
 	if sum != expected {
