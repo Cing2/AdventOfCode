@@ -24,6 +24,6 @@ func main() {
 		day2.Part2(file_name)
 	case 3:
 		day3.Part1(file_name)
-		// day3.Part2(file_name)
+		day3.Part2(file_name)
 	}
 }

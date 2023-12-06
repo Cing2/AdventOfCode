@@ -16,7 +16,7 @@ func TestPart1(t *testing.T) {
 func TestPart2(t *testing.T) {
 	var sum = Part2("../samples/day3.txt")
 	fmt.Print(sum)
-	var expected = 0
+	var expected = 467835
 	if sum != expected {
 		t.Errorf("Wrong output %d != %d", expected, sum)
 	}
