@@ -7,7 +7,7 @@ import (
 
 func TestPart1(t *testing.T) {
 	var sum = Part1("../samples/day5.txt")
-	var expected = 0
+	var expected = 35
 	if sum != expected {
 		t.Errorf("Wrong output %d != %d", expected, sum)
 	}
