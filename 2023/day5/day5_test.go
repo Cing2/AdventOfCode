@@ -1,7 +1,6 @@
 package day5
 
 import (
-	"fmt"
 	"testing"
 )
 
@@ -15,8 +14,7 @@ func TestPart1(t *testing.T) {
 
 func TestPart2(t *testing.T) {
 	var sum = Part2("../samples/day5.txt")
-	fmt.Print(sum)
-	var expected = 0
+	var expected = 46
 	if sum != expected {
 		t.Errorf("Wrong output %d != %d", expected, sum)
 	}
