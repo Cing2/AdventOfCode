@@ -129,12 +129,12 @@ func Part2(filename string) int {
 	}
 
 	var sum = 0
-	for _, nums := range gears{
-		if len(nums) >1{
+	for _, nums := range gears {
+		if len(nums) > 1 {
 			// get multiple and add to sum
 			var ratio = 1
 			for _, num := range nums {
-				ratio = ratio*num
+				ratio = ratio * num
 			}
 			sum += ratio
 		}

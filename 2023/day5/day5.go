@@ -17,10 +17,10 @@ type mapping struct {
 type ranges struct {
 	dest   int
 	source int
-	length   int
+	length int
 }
 
-func parseInput(scanner *bufio.Scanner) ([]int, []mapping){
+func parseInput(scanner *bufio.Scanner) ([]int, []mapping) {
 	var i = 0
 	var seeds []int
 	var maps []mapping
@@ -57,7 +57,7 @@ func parseInput(scanner *bufio.Scanner) ([]int, []mapping){
 	return seeds, maps
 }
 
-func checkIntinRange(num int, rang *ranges) int{
+func checkIntinRange(num int, rang *ranges) int {
 	dif := num - rang.source
 	if dif >= 0 && dif < rang.length {
 		// num in range
@@ -65,15 +65,15 @@ func checkIntinRange(num int, rang *ranges) int{
 	}
 	return -1
 }
-func processSeeds(seeds *[]int,  *[]mapping) {
 
+func processSeeds(seeds *[]int, maps *[]mapping) int {
 	var results []int
-	for _, seed := range seeds {
+	for _, seed := range *seeds {
 		// follow seed trhough maps
-		for _, mapping := range maps {
+		for _, mapping := range *maps {
 			for _, ranges := range mapping.ranges {
-				// check if seed in range 
-				if dif :=checkIntinRange(seed, &ranges); dif >=0 {
+				// check if seed in range
+				if dif := checkIntinRange(seed, &ranges); dif >= 0 {
 					// range fits convert seed
 					seed = ranges.dest + dif
 					break
@@ -82,23 +82,38 @@ func processSeeds(seeds *[]int,  *[]mapping) {
 		}
 		results = append(results, seed)
 	}
+
 	return slices.Min(results)
 }
-
 
 func Part1(filename string) int {
 	scanner, f := common.FileBuffer(filename)
 	defer f.Close()
 	seeds, maps := parseInput(scanner)
 
-	// fmt.Println(results)
+	result := processSeeds(&seeds, &maps)
+	fmt.Println("Answer: ", result)
 
-	fmt.Println("Answer: ", slices.Min(results))
-
-	return slices.Min(results)
+	return result
 }
 
 func Part2(filename string) int {
+	scanner, f := common.FileBuffer(filename)
+	defer f.Close()
+	seeds, maps := parseInput(scanner)
 
-	return 0
+	//expand ranges of seeds
+	var newSeeds []int
+	for i, seed := range seeds {
+		if i%2 == 0 {
+			for j := 0; j < seeds[i+1]; j++ {
+				newSeeds = append(newSeeds, seed+j)
+			}
+		}
+	}
+
+	result := processSeeds(&newSeeds, &maps)
+	fmt.Println("Answer: ", result)
+
+	return result
 }
