@@ -3,7 +3,6 @@ package day8
 import (
 	"aoc/2023/common"
 	"bufio"
-	"fmt"
 	"strings"
 )
 
@@ -63,50 +62,62 @@ func Part1(filename string) int {
 	return instuctionCounter
 }
 
+type cycle struct {
+	node  string
+	round int
+}
+
+func findCycle(startingNode string, maps maps) int {
+	var instuctionCounter = 0
+	var currentNode = startingNode
+	for {
+		if strings.HasSuffix(currentNode, "Z") {
+			return instuctionCounter
+		}
+		// follow node
+		var instruction = maps.instructions[instuctionCounter%len(maps.instructions)]
+		if instruction == 'L' {
+			currentNode = maps.nodes[currentNode].left
+		} else {
+			currentNode = maps.nodes[currentNode].right
+		}
+		instuctionCounter += 1
+	}
+}
+
+// greatest common divisor (GCD) via Euclidean algorithm
+func GCD(a, b int) int {
+	for b != 0 {
+		t := b
+		b = a % b
+		a = t
+	}
+	return a
+}
+
+// find Least Common Multiple (LCM) via GCD
+func LCM(integers ...int) int {
+	result := integers[0] * integers[1] / GCD(integers[0], integers[1])
+
+	for i := 2; i < len(integers); i++ {
+		result = LCM(result, integers[i])
+	}
+
+	return result
+}
 func Part2(filename string) int {
 	scanner, f := common.FileBuffer(filename)
 	defer f.Close()
 	maps := parseMap(scanner)
-	// fmt.Println(maps)
-	var currentNodes []string
+
+	var cycles []int
 	for node, _ := range maps.nodes {
 		if strings.HasSuffix(node, "A") {
-		currentNodes = append(currentNodes, node)
+			cycles = append(cycles, findCycle(node, maps))
 		}
 	}
-	fmt.Println(currentNodes)
+	// get smallest common denominator
+	var lcm = LCM(cycles...)
 
-	var instuctionCounter = 0
-	for {
-		var atEnd = true
-		for _, node := range currentNodes {
-			if !strings.HasSuffix(node, "Z") {
-				atEnd = false
-			}
-		}
-		if atEnd {
-			break
-		}
-		// follow nodes
-		var instruction = maps.instructions[instuctionCounter%len(maps.instructions)]
-		if instruction == 'L' {
-
-		for i, currentNode := range currentNodes {
-			currentNodes[i] = maps.nodes[currentNode].left
-		}
-		} else {
-		for i, currentNode := range currentNodes {
-			currentNodes[i] = maps.nodes[currentNode].right
-		}
-		}
-		instuctionCounter += 1
-		if instuctionCounter > 1000000{
-			fmt.Println(currentNodes)
-			panic("taking to long")
-			
-		}
-	}
-
-
-	return instuctionCounter
+	return lcm
 }
