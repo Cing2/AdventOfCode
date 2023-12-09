@@ -9,6 +9,7 @@ import (
 	"aoc/2023/day6"
 	"aoc/2023/day7"
 	"aoc/2023/day8"
+	"aoc/2023/day9"
 	"flag"
 	"fmt"
 	"html/template"
@@ -95,5 +96,8 @@ func main() {
 	case 8:
 		fmt.Println("Part 1: ", day8.Part1(file_name))
 		fmt.Println("Part 2: ", day8.Part2(file_name))
+	case 9:
+		fmt.Println("Part 1: ", day9.Part1(file_name))
+		fmt.Println("Part 2: ", day9.Part2(file_name))
 	}
 }
