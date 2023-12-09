@@ -7,6 +7,7 @@ import (
 	"aoc/2023/day4"
 	"aoc/2023/day5"
 	"aoc/2023/day6"
+	"aoc/2023/day7"
 	"flag"
 	"fmt"
 	"html/template"
