@@ -1,11 +1,11 @@
-package day{{.}}
+package day7
 
 import (
 	"testing"
 )
 
 func TestPart1(t *testing.T) {
-	var result = Part1("../samples/day{{.}}.txt")
+	var result = Part1("../samples/day7.txt")
 	var expected = 0
 	fmt.Println("Result: ", result)
 	if result != expected {
@@ -14,7 +14,7 @@ func TestPart1(t *testing.T) {
 }
 
 func TestPart2(t *testing.T) {
-	var result = Part2("../samples/day{{.}}.txt")
+	var result = Part2("../samples/day7.txt")
 	var expected = 0
 	fmt.Println("Result: ", result)
 	if result != expected {
