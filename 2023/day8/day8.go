@@ -1,4 +1,4 @@
-package day{{.}}
+package day8
 
 import ( "aoc/2023/common" )
 
