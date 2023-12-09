@@ -39,7 +39,7 @@ func expandOasis(numbers []int) (int, int) {
 	return sumFirstNumbs, sumLastNumbs
 }
 
-func Part1(filename string)  int {
+func Part1(filename string) int {
 	scanner, f := common.FileBuffer(filename)
 	defer f.Close()
 	var sumLeft = 0
