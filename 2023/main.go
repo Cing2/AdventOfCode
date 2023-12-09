@@ -14,6 +14,7 @@ import (
 	"fmt"
 	"html/template"
 	"os"
+	"time"
 )
 
 func writeTemplate(pathTemplate string, output string, day int) {
@@ -57,21 +58,12 @@ func createNewDay(day int) {
 	defer f2.Close()
 }
 
-func main() {
-	run_day := flag.Int("d", 1, "Specify day to run")
-	make_new := flag.Bool("new", false, "Make file for new day")
-	flag.Parse()
+func RunDay(run_day int) {
+	start := time.Now()
 
-	if *make_new {
-		fmt.Printf("Creating folder for day %d", *run_day)
-		createNewDay(*run_day)
-		return
-	}
+	var file_name = fmt.Sprintf("inputs/day%d.txt", run_day)
 
-	var file_name = fmt.Sprintf("inputs/day%d.txt", *run_day)
-
-	fmt.Printf("Running Day %d with %s\n", *run_day, file_name)
-	switch *run_day {
+	switch run_day {
 	case 1:
 		day1.Part1(file_name)
 		day1.Part2(file_name)
@@ -99,5 +91,28 @@ func main() {
 	case 9:
 		fmt.Println("Part 1: ", day9.Part1(file_name))
 		fmt.Println("Part 2: ", day9.Part2(file_name))
+	}
+	elapsed := time.Now().Sub(start)
+
+	fmt.Printf("Running Day %d took  %s\n", run_day, elapsed)
+}
+
+func main() {
+	day := flag.Int("d", 1, "Specify day to run")
+	make_new := flag.Bool("new", false, "Make file for new day")
+	all := flag.Bool("all", false, "Run all days")
+	flag.Parse()
+
+	if *make_new {
+		fmt.Printf("Creating folder for day %d", *day)
+		createNewDay(*day)
+		return
+	}
+	if *all {
+		for i := 0; i <= 9; i++ {
+			RunDay(i)
+		}
+	} else {
+		RunDay(*day)
 	}
 }
