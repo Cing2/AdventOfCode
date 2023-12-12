@@ -2,6 +2,7 @@ package main
 
 import (
 	"aoc/2023/day1"
+	"aoc/2023/day10"
 	"aoc/2023/day2"
 	"aoc/2023/day3"
 	"aoc/2023/day4"
@@ -91,6 +92,9 @@ func RunDay(run_day int) {
 	case 9:
 		fmt.Println("Part 1: ", day9.Part1(file_name))
 		fmt.Println("Part 2: ", day9.Part2(file_name))
+	case 10:
+		fmt.Println("Part 1: ", day10.Part1(file_name))
+		fmt.Println("Part 2: ", day10.Part2(file_name))
 	}
 	elapsed := time.Now().Sub(start)
 
