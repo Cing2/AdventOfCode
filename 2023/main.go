@@ -4,6 +4,7 @@ import (
 	"aoc/2023/day1"
 	"aoc/2023/day10"
 	"aoc/2023/day11"
+	"aoc/2023/day12"
 	"aoc/2023/day2"
 	"aoc/2023/day3"
 	"aoc/2023/day4"
@@ -99,8 +100,11 @@ func RunDay(run_day int) {
 	case 11:
 		fmt.Println("Part 1: ", day11.Part1(file_name))
 		fmt.Println("Part 2: ", day11.Part2(file_name, 1000000))
+	case 12:
+		fmt.Println("Part 1: ", day12.Part1(file_name))
+		fmt.Println("Part 2: ", day12.Part2(file_name))
 	}
-	elapsed := time.Now().Sub(start)
+	elapsed := time.Since(start)
 
 	fmt.Printf("Running Day %d took  %s\n", run_day, elapsed)
 }
