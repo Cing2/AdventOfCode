@@ -21,9 +21,9 @@ func FileBuffer(filename string) (*bufio.Scanner, *os.File) {
 	return scanner, f
 }
 
-func StringToInts(str *string) []int {
+func StringToInts(str *string, sep string) []int {
 	var new = strings.Trim(*str, " ")
-	var splits = strings.Split(new, " ")
+	var splits = strings.Split(new, sep)
 	var nums []int
 	for _, split := range splits {
 		if split == "" {
@@ -37,6 +37,7 @@ func StringToInts(str *string) []int {
 	}
 	return nums
 }
+
 
 type Integers interface {
 	int64 | int

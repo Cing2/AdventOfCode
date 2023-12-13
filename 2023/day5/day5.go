@@ -36,7 +36,7 @@ func parseInput(scanner *bufio.Scanner) ([]int, []mapping) {
 		if i == 1 {
 			// get seeds
 			splits := strings.Split(scanner.Text(), ":")
-			seeds = common.StringToInts(&splits[1])
+			seeds = common.StringToInts(&splits[1], " ")
 			continue
 		}
 		var text = scanner.Text()
@@ -52,7 +52,7 @@ func parseInput(scanner *bufio.Scanner) ([]int, []mapping) {
 			continue
 		}
 		// else it is a range
-		var numbers = common.StringToInts(&text)
+		var numbers = common.StringToInts(&text, " ")
 		newMapping.ranges = append(newMapping.ranges, map_range{numbers[0], numbers[1], numbers[2]})
 	}
 

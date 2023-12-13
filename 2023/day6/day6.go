@@ -18,10 +18,10 @@ func Part1(filename string) int {
 	for scanner.Scan() {
 		if strings.Contains(scanner.Text(), "Time") {
 			var text = strings.Trim(scanner.Text(), "Time:")
-			times = common.StringToInts(&text)
+			times = common.StringToInts(&text, " ")
 		} else {
 			var text = strings.Trim(scanner.Text(), "Distance:")
-			records = common.StringToInts(&text)
+			records = common.StringToInts(&text, " ")
 		}
 	}
 

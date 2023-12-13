@@ -46,7 +46,7 @@ func Part1(filename string) int {
 	var sumRight = 0
 	for scanner.Scan() {
 		var text = scanner.Text()
-		var left, right = expandOasis(common.StringToInts(&text))
+		var left, right = expandOasis(common.StringToInts(&text, " "))
 		sumLeft += left
 		sumRight += right
 	}
@@ -62,7 +62,7 @@ func Part2(filename string) int {
 	var sumRight = 0
 	for scanner.Scan() {
 		var text = scanner.Text()
-		var left, right = expandOasis(common.StringToInts(&text))
+		var left, right = expandOasis(common.StringToInts(&text, " "))
 		// fmt.Println(left, right)
 		sumLeft += left
 		sumRight += right

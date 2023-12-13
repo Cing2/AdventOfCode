@@ -22,8 +22,8 @@ func extractCards(scanner *bufio.Scanner) []Card {
 
 		// get numbers
 		newCard := Card{
-			common.StringToInts(&splits[0]),
-			common.StringToInts(&splits[1]),
+			common.StringToInts(&splits[0], " "),
+			common.StringToInts(&splits[1], " "),
 		}
 		cards = append(cards, newCard)
 	}
