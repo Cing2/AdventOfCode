@@ -38,7 +38,11 @@ func StringToInts(str *string) []int {
 	return nums
 }
 
-func AbsInt(num int) int {
+type Integers interface {
+	int64 | int
+}
+
+func AbsInt[V Integers](num V) V {
 	if num < 0 {
 		return -num
 	}
