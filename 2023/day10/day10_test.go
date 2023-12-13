@@ -1,8 +1,8 @@
 package day10
 
 import (
-	"testing"
 	"fmt"
+	"testing"
 )
 
 func TestPart1(t *testing.T) {
@@ -15,10 +15,17 @@ func TestPart1(t *testing.T) {
 }
 
 func TestPart2(t *testing.T) {
-	var result = Part2("../samples/day10_23.txt")
-	var expected = 10
-	fmt.Println("Result: ", result)
-	if result != expected {
-		t.Errorf("Wrong output %d != %d", expected, result)
+	var samples = map[string]int{
+		"../samples/day10_1.txt": 1,
+		"../samples/day10_2.txt": 4,
+		"../samples/day10_23.txt": 10,
+	}
+
+	for sample, expected := range samples {
+		var result = Part2(sample)
+		fmt.Println("Result: ", result)
+		if result != expected {
+			t.Errorf("Wrong output %d != %d", expected, result)
+		}
 	}
 }

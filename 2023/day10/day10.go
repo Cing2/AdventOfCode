@@ -86,7 +86,6 @@ func Part1(filename string) int {
 		}
 		i += 1
 	}
-	// fmt.Println(matrix, startPos)
 
 	// BFS from start
 	var visited = map[Pos]int{}
@@ -110,7 +109,6 @@ func Part1(filename string) int {
 			continue
 		}
 
-		// fmt.Println(nextNode, string( char ))
 		// process node
 		var connectPrevious = false
 		var newNode node
@@ -125,20 +123,15 @@ func Part1(filename string) int {
 
 			if nextNode.from == Start {
 				// start should add every node
-				// fmt.Println("Start", newNode)
 				queue = append(queue, newNode)
 			}
 		}
 		if connectPrevious {
 			// only visit node when previous connects
 			visited[nextNode.pos] = nextNode.dist
-			// fmt.Println("New", newNode)
 			queue = append(queue, newNode)
 		}
 	}
-	// fmt.Println(len(visited), visited)
-	// print dist map
-
 	// get max
 	var max_dist = 0
 	for _, dist := range visited {
@@ -150,8 +143,8 @@ func Part1(filename string) int {
 
 func printVisited(visited *map[Pos]int, matrix *[]string) {
 	for i := 0; i < len(*matrix); i++ {
-		for j := 0; j < len(( *matrix )[0]); j++ {
-			dist, ok := ( *visited )[Pos{i, j}]
+		for j := 0; j < len((*matrix)[0]); j++ {
+			dist, ok := (*visited)[Pos{i, j}]
 			if ok {
 				fmt.Print(dist)
 			} else {
@@ -163,8 +156,81 @@ func printVisited(visited *map[Pos]int, matrix *[]string) {
 }
 
 func Part2(filename string) int {
-	// scanner, f := common.FileBuffer(filename)
-	// defer f.Close()
+	scanner, f := common.FileBuffer(filename)
+	defer f.Close()
+	var matrix []string
+	var startPos Pos
+	var i = 0
+	for scanner.Scan() {
+		matrix = append(matrix, scanner.Text())
+		for j, c := range scanner.Text() {
+			if c == 'S' {
+				startPos = Pos{i, j}
+			}
+		}
+		i += 1
+	}
+	loop := newfindLoop(&matrix, startPos)
+	// calculate area under polygon
+	area := areaPolygon(&loop)
+	// subtract length of loop to find enclosed spaces
+	return area - (len(loop)+1)/2 + 1
+}
 
-	return 0
+func areaPolygon(vertices *[]Pos) int {
+	var sum = 0
+	for i := 0; i < len(*vertices)-1; i++ {
+		sum += (*vertices)[i].x*(*vertices)[i+1].y - (*vertices)[i+1].x*(*vertices)[i].y
+	}
+	sum += (*vertices)[len(*vertices)-1].x*(*vertices)[0].y - (*vertices)[0].x*(*vertices)[len(*vertices)-1].y
+
+	return common.AbsInt(sum) / 2
+}
+
+func newfindLoop(matrix *[]string, startPos Pos) []Pos {
+	var orderVisited []Pos
+	for _, dir := range nodeType['S'] {
+		orderVisited = []Pos{startPos}
+		var foundStart = false
+		for {
+			nextPos := orderVisited[len(orderVisited)-1].Add(dir.Dir())
+			// check pos in range
+			if nextPos.x < 0 || nextPos.x >= len(*matrix) || nextPos.y < 0 || nextPos.y >= len((*matrix)[0]) {
+				// dead end
+				break
+			}
+			if nextPos == startPos {
+				foundStart = true
+				break
+			}
+			var char = (*matrix)[nextPos.x][nextPos.y]
+			if char == '.' {
+				// dead end
+				break
+			}
+
+			// check if node connects and what is nextNode
+			var nodeConnects = true
+			var nextDir Dir
+			for _, newDir := range nodeType[rune(char)] {
+				if newDir.reverse(dir) {
+					nodeConnects = true
+					continue
+				}
+				nextDir = newDir
+			}
+			if nodeConnects {
+				orderVisited = append(orderVisited, nextPos)
+				dir = nextDir
+			} else {
+				// dead end at start
+				break
+			}
+		}
+		if foundStart {
+			break
+		}
+	}
+
+	return orderVisited
 }

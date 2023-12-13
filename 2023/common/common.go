@@ -37,3 +37,10 @@ func StringToInts(str *string) []int {
 	}
 	return nums
 }
+
+func AbsInt(num int) int {
+	if num < 0 {
+		return -num
+	}
+	return num
+}

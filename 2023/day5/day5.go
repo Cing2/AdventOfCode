@@ -102,13 +102,6 @@ func Part1(filename string) int {
 	return result
 }
 
-func AbsInt(num int) int {
-	if num < 0 {
-		return -num
-	}
-	return num
-}
-
 func seedsInMap(seed *arange, mapping *map_range) ([]arange, []arange) {
 	// check if ranges overlap
 	diff := mapping.source - seed.start
@@ -140,7 +133,7 @@ func seedsInMap(seed *arange, mapping *map_range) ([]arange, []arange) {
 		}
 	} else {
 		// seed start is after or same as mapping start
-		if AbsInt(diff) < mapping.length {
+		if common.AbsInt(diff) < mapping.length {
 			// range overlap
 			if seed.start+seed.length <= mapping.source+mapping.length {
 				// fully contained
@@ -153,7 +146,7 @@ func seedsInMap(seed *arange, mapping *map_range) ([]arange, []arange) {
 				// remaining is start end of mapping and remaining length
 				remaining = append(remaining, arange{mapping.source + mapping.length, seed.length - lenghtInside})
 				// changed is destination + diff and length inside
-				changed = append(changed, arange{mapping.dest + AbsInt(diff), lenghtInside})
+				changed = append(changed, arange{mapping.dest + common.AbsInt(diff), lenghtInside})
 			}
 		} else {
 			// no overlap seed if fully after range
