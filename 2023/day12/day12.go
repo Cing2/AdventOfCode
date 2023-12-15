@@ -5,51 +5,21 @@ import (
 	"strings"
 )
 
-func calcCombinations(row string, sets *[]int) int {
-	// calculate how many combinations are possible that are correct
-	var indexQ = strings.Index(row, "?")
-	if indexQ == -1 {
-		// all filled check if row is possible with set
-		var nextArrang = 0
-		var countHash = 0
-		for _, c := range row {
-			if c == '#' {
-				// continue counting
-				countHash += 1
-			} else if countHash > 0 {
-				// check if value is in set
-				if nextArrang < len(*sets) && countHash == (*sets)[nextArrang] {
-					nextArrang += 1
-				} else {
-					// to  # for next one
-					return 0
-				}
-				countHash = 0
-			}
-		}
-		if countHash > 0 {
-			if nextArrang < len(*sets) && countHash == (*sets)[nextArrang] {
-				nextArrang += 1
-			} else {
-				return 0
-			}
-		}
-		if len(*sets) == nextArrang {
-			// sets are the same
-			return 1
-		}
-		return 0
-	} else {
-		// recurse over solutions
-		var new0 = strings.Replace(row, "?", "#", 1)
-		var new1 = strings.Replace(row, "?", ".", 1)
-
-		return calcCombinations(new0, sets) + calcCombinations(new1, sets)
-	}
+type combination struct {
+	curV      byte
+	nextSet   int
+	countHash int
+	rem_row   string
 }
 
-func calcCombinations3(row *string, sets *[]int, curI int, curV byte, nextSet int, countHash int) int {
+func calcCombinationsCached(row *string, sets *[]int, curI int, curV byte, nextSet int, countHash int, cache *map[combination]int) int {
 	// recusively check every character of the string at the time
+	// check if cache contains combinations
+	combie, ok := (*cache)[combination{curV, nextSet, countHash, (*row)[curI:]}]
+	if ok {
+		return combie
+	}
+
 	// for every charcter check if still following set and for ? check both
 	if curV == '#' {
 		// continue counting
@@ -71,7 +41,9 @@ func calcCombinations3(row *string, sets *[]int, curI int, curV byte, nextSet in
 		}
 	} else if curV == '?' {
 		// recurse on both options
-		return calcCombinations3(row, sets, curI, '#', nextSet, countHash) + calcCombinations3(row, sets, curI, '.', nextSet, countHash)
+		combies := calcCombinationsCached(row, sets, curI, '#', nextSet, countHash, cache) + calcCombinationsCached(row, sets, curI, '.', nextSet, countHash, cache)
+		(*cache)[combination{curV, nextSet, countHash, (*row)[(curI):]}] = combies
+		return combies
 	}
 
 	// check if at end
@@ -91,7 +63,9 @@ func calcCombinations3(row *string, sets *[]int, curI int, curV byte, nextSet in
 		return 0
 	} else {
 		// go to next character
-		return calcCombinations3(row, sets, curI+1, (*row)[curI+1], nextSet, countHash)
+		combies := calcCombinationsCached(row, sets, curI+1, (*row)[curI+1], nextSet, countHash, cache)
+		(*cache)[combination{curV, nextSet, countHash, (*row)[(curI + 1):]}] = combies
+		return combies
 	}
 }
 
@@ -103,13 +77,31 @@ func Part1(filename string) int {
 		splits := strings.Split(scanner.Text(), " ")
 		var row = splits[0]
 		var sets = common.StringToInts(&splits[1], ",")
-		combies := calcCombinations3(&row, &sets, 0, row[0], 0, 0)
+		var cache = map[combination]int{}
+		combies := calcCombinationsCached(&row, &sets, 0, row[0], 0, 0, &cache)
+
 		sum += combies
 	}
 
 	return sum
 }
 
+// Assumption: n >= 0
+func IntPow(base, exp int) int {
+	result := 1
+	for {
+		if exp&1 == 1 {
+			result *= base
+		}
+		exp >>= 1
+		if exp == 0 {
+			break
+		}
+		base *= base
+	}
+
+	return result
+}
 func Part2(filename string) int {
 	scanner, f := common.FileBuffer(filename)
 	defer f.Close()
@@ -119,10 +111,19 @@ func Part2(filename string) int {
 		splits := strings.Split(scanner.Text(), " ")
 		var row = splits[0]
 		var sets = common.StringToInts(&splits[1], ",")
+
 		// duplicate row 5 times
-		row = strings.Join(row*5, "?")
-		var newSet = 
-		combies := calcCombinations3(&row, &sets, 0, row[0], 0, 0)
+		var newSets []int
+		var moreRows []string
+		for i := 0; i < 5; i++ {
+			newSets = append(newSets, sets...)
+			moreRows = append(moreRows, row)
+		}
+		var newRow = strings.Join(moreRows, "?")
+
+		var cache = map[combination]int{}
+		combies := calcCombinationsCached(&newRow, &newSets, 0, newRow[0], 0, 0, &cache)
+
 		sum += combies
 	}
 
