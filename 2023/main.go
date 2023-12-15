@@ -5,6 +5,7 @@ import (
 	"aoc/2023/day10"
 	"aoc/2023/day11"
 	"aoc/2023/day12"
+	"aoc/2023/day13"
 	"aoc/2023/day2"
 	"aoc/2023/day3"
 	"aoc/2023/day4"
@@ -64,49 +65,77 @@ func createNewDay(day int) {
 func RunDay(run_day int) {
 	start := time.Now()
 
+	fmt.Println("Running day ", run_day)
+
 	var file_name = fmt.Sprintf("inputs/day%d.txt", run_day)
+
+	var res_part1 int
+	var res_part2 int
+	var time_part1 time.Time
 
 	switch run_day {
 	case 1:
-		day1.Part1(file_name)
-		day1.Part2(file_name)
+		res_part1 = day1.Part1(file_name)
+		time_part1 = time.Now()
+		res_part2 = day1.Part2(file_name)
 	case 2:
-		day2.Part1(file_name)
-		day2.Part2(file_name)
+		res_part1 = day2.Part1(file_name)
+		time_part1 = time.Now()
+		res_part2 = day2.Part2(file_name)
 	case 3:
-		day3.Part1(file_name)
-		day3.Part2(file_name)
+		res_part1 = day3.Part1(file_name)
+		time_part1 = time.Now()
+		res_part2 = day3.Part2(file_name)
 	case 4:
-		day4.Part1(file_name)
-		day4.Part2(file_name)
+		res_part1 = day4.Part1(file_name)
+		time_part1 = time.Now()
+		res_part2 = day4.Part2(file_name)
 	case 5:
-		day5.Part1(file_name)
-		day5.Part2(file_name)
+		res_part1 = day5.Part1(file_name)
+		time_part1 = time.Now()
+		res_part2 = day5.Part2(file_name)
 	case 6:
-		fmt.Println("Part 1: ", day6.Part1(file_name))
-		fmt.Println("Part 2: ", day6.Part2(file_name))
+		res_part1 = day6.Part1(file_name)
+		time_part1 = time.Now()
+		res_part2 = day6.Part2(file_name)
 	case 7:
-		fmt.Println("Part 1: ", day7.Part1(file_name))
-		fmt.Println("Part 2: ", day7.Part2(file_name))
+		res_part1 = day7.Part1(file_name)
+		time_part1 = time.Now()
+		res_part2 = day7.Part2(file_name)
 	case 8:
-		fmt.Println("Part 1: ", day8.Part1(file_name))
-		fmt.Println("Part 2: ", day8.Part2(file_name))
+		res_part1 = day8.Part1(file_name)
+		time_part1 = time.Now()
+		res_part2 = day8.Part2(file_name)
 	case 9:
-		fmt.Println("Part 1: ", day9.Part1(file_name))
-		fmt.Println("Part 2: ", day9.Part2(file_name))
+		res_part1 = day9.Part1(file_name)
+		time_part1 = time.Now()
+		res_part2 = day9.Part2(file_name)
 	case 10:
-		fmt.Println("Part 1: ", day10.Part1(file_name))
-		fmt.Println("Part 2: ", day10.Part2(file_name))
+		res_part1 = day10.Part1(file_name)
+		time_part1 = time.Now()
+		res_part2 = day10.Part2(file_name)
 	case 11:
-		fmt.Println("Part 1: ", day11.Part1(file_name))
-		fmt.Println("Part 2: ", day11.Part2(file_name, 1000000))
+		res_part1 = day11.Part1(file_name)
+		time_part1 = time.Now()
+		res_part2 = day11.Part2(file_name, 1000000)
 	case 12:
-		fmt.Println("Part 1: ", day12.Part1(file_name))
-		fmt.Println("Part 2: ", day12.Part2(file_name))
-	}
-	elapsed := time.Since(start)
+		res_part1 = day12.Part1(file_name)
+		time_part1 = time.Now()
+		res_part2 = day12.Part2(file_name)
+	case 13:
+		res_part1 = day13.Part1(file_name)
+		time_part1 = time.Now()
+		res_part2 = day13.Part2(file_name)
+	default:
+		return
 
-	fmt.Printf("Running Day %d took  %s\n", run_day, elapsed)
+	}
+	elapsed_part1 := time_part1.Sub(start)
+	elapsed_part2 := time.Since(time_part1)
+	fmt.Printf("Part 1: %d \t took %s\n", res_part1, elapsed_part1)
+	fmt.Printf("Part 2: %d \t took %s\n", res_part2, elapsed_part2)
+	fmt.Printf("Total time: %s\n", elapsed_part1+elapsed_part2)
+
 }
 
 func main() {
@@ -121,7 +150,7 @@ func main() {
 		return
 	}
 	if *all {
-		for i := 0; i <= 9; i++ {
+		for i := 1; i <= 14; i++ {
 			RunDay(i)
 		}
 	} else {

@@ -16,8 +16,8 @@ func TestPart1(t *testing.T) {
 
 func TestPart2(t *testing.T) {
 	var samples = map[string]int{
-		"../samples/day10_1.txt": 1,
-		"../samples/day10_2.txt": 4,
+		"../samples/day10_1.txt":  1,
+		"../samples/day10_2.txt":  4,
 		"../samples/day10_23.txt": 10,
 	}
 

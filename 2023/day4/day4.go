@@ -3,7 +3,6 @@ package day4
 import (
 	"aoc/2023/common"
 	"bufio"
-	"fmt"
 	"strings"
 )
 
@@ -54,7 +53,6 @@ func Part1(filename string) int {
 		sum += similar
 	}
 
-	fmt.Printf("Sum = %d\n", sum)
 	return sum
 }
 
@@ -89,6 +87,5 @@ func Part2(filename string) int {
 		sum += v
 	}
 
-	fmt.Printf("Sum = %d\n", sum)
 	return sum
 }

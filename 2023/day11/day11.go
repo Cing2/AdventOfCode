@@ -51,10 +51,10 @@ func readGalaxiesExpand(scanner *bufio.Scanner, expandMultiple int) []Pos {
 			// for every universe with column greater then c add 1
 			for i, gal := range galaxies {
 				if gal.y > c+expansions {
-					galaxies[i].y += expandMultiple-1
+					galaxies[i].y += expandMultiple - 1
 				}
 			}
-			expansions += expandMultiple -1
+			expansions += expandMultiple - 1
 		}
 	}
 

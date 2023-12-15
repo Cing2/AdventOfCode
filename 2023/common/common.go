@@ -38,7 +38,6 @@ func StringToInts(str *string, sep string) []int {
 	return nums
 }
 
-
 type Integers interface {
 	int64 | int
 }

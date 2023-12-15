@@ -97,7 +97,6 @@ func Part1(filename string) int {
 	seeds, maps := parseInput(scanner)
 
 	result := processSeeds(&seeds, &maps)
-	fmt.Println("Answer: ", result)
 
 	return result
 }
@@ -215,8 +214,6 @@ func Part2(filename string) int {
 	for _, seed := range inputSeeds {
 		result = min(result, seed.start)
 	}
-
-	fmt.Println("Answer: ", result)
 
 	return result
 }

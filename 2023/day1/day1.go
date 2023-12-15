@@ -28,7 +28,6 @@ func Part1(filename string) int {
 		sum += num
 	}
 
-	fmt.Printf("Sum = %d\n", sum)
 	return sum
 }
 
@@ -84,6 +83,5 @@ func Part2(filename string) int {
 		sum += combinedNum
 	}
 
-	fmt.Printf("Sum = %d\n", sum)
 	return sum
 }
