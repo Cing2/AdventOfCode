@@ -6,6 +6,7 @@ import (
 	"aoc/2023/day11"
 	"aoc/2023/day12"
 	"aoc/2023/day13"
+	"aoc/2023/day14"
 	"aoc/2023/day2"
 	"aoc/2023/day3"
 	"aoc/2023/day4"
@@ -126,6 +127,10 @@ func RunDay(run_day int) {
 		res_part1 = day13.Part1(file_name)
 		time_part1 = time.Now()
 		res_part2 = day13.Part2(file_name)
+	case 14:
+		res_part1 = day14.Part1(file_name)
+		time_part1 = time.Now()
+		res_part2 = day14.Part2(file_name)
 	default:
 		return
 
