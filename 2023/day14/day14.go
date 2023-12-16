@@ -144,6 +144,8 @@ func performCycle(platform *Platform) {
 	tiltPlatform(platform, East)
 }
 
+
+
 func Part2(filename string) int {
 	scanner, f := common.FileBuffer(filename)
 	defer f.Close()
