@@ -36,7 +36,7 @@ func parseInput(scanner *bufio.Scanner) ([]int, []mapping) {
 		if i == 1 {
 			// get seeds
 			splits := strings.Split(scanner.Text(), ":")
-			seeds = common.StringToInts(&splits[1])
+			seeds = common.StringToInts(&splits[1], " ")
 			continue
 		}
 		var text = scanner.Text()
@@ -52,7 +52,7 @@ func parseInput(scanner *bufio.Scanner) ([]int, []mapping) {
 			continue
 		}
 		// else it is a range
-		var numbers = common.StringToInts(&text)
+		var numbers = common.StringToInts(&text, " ")
 		newMapping.ranges = append(newMapping.ranges, map_range{numbers[0], numbers[1], numbers[2]})
 	}
 
@@ -97,16 +97,8 @@ func Part1(filename string) int {
 	seeds, maps := parseInput(scanner)
 
 	result := processSeeds(&seeds, &maps)
-	fmt.Println("Answer: ", result)
 
 	return result
-}
-
-func AbsInt(num int) int {
-	if num < 0 {
-		return -num
-	}
-	return num
 }
 
 func seedsInMap(seed *arange, mapping *map_range) ([]arange, []arange) {
@@ -140,7 +132,7 @@ func seedsInMap(seed *arange, mapping *map_range) ([]arange, []arange) {
 		}
 	} else {
 		// seed start is after or same as mapping start
-		if AbsInt(diff) < mapping.length {
+		if common.AbsInt(diff) < mapping.length {
 			// range overlap
 			if seed.start+seed.length <= mapping.source+mapping.length {
 				// fully contained
@@ -153,7 +145,7 @@ func seedsInMap(seed *arange, mapping *map_range) ([]arange, []arange) {
 				// remaining is start end of mapping and remaining length
 				remaining = append(remaining, arange{mapping.source + mapping.length, seed.length - lenghtInside})
 				// changed is destination + diff and length inside
-				changed = append(changed, arange{mapping.dest + AbsInt(diff), lenghtInside})
+				changed = append(changed, arange{mapping.dest + common.AbsInt(diff), lenghtInside})
 			}
 		} else {
 			// no overlap seed if fully after range
@@ -222,8 +214,6 @@ func Part2(filename string) int {
 	for _, seed := range inputSeeds {
 		result = min(result, seed.start)
 	}
-
-	fmt.Println("Answer: ", result)
 
 	return result
 }

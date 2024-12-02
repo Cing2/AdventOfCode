@@ -2,17 +2,9 @@ package day2
 
 import (
 	"aoc/2023/common"
-	"bufio"
-	"fmt"
-	"os"
 	"strconv"
 	"strings"
 )
-
-func parseInput(buffer *bufio.Scanner, f *os.File) {
-	defer f.Close()
-
-}
 
 var maxCubes = map[string]int{
 	"red":   12,
@@ -38,7 +30,6 @@ func Part1(filename string) int {
 			var cubes = strings.Split(draw, ",")
 			for _, cube := range cubes {
 				var ab = strings.Split(strings.Trim(cube, " "), " ")
-				// fmt.Println(ab)
 				var num, _ = strconv.Atoi(ab[0])
 				if maxCubes[ab[1]] < num {
 					linePossible = false
@@ -52,7 +43,6 @@ func Part1(filename string) int {
 
 	}
 
-	fmt.Printf("Sum = %d\n", sum)
 	return sum
 }
 
@@ -85,6 +75,5 @@ func Part2(filename string) int {
 		sum += minColors["red"] * minColors["green"] * minColors["blue"]
 	}
 
-	fmt.Printf("Sum = %d\n", sum)
 	return sum
 }

@@ -3,7 +3,6 @@ package day4
 import (
 	"aoc/2023/common"
 	"bufio"
-	"fmt"
 	"strings"
 )
 
@@ -22,8 +21,8 @@ func extractCards(scanner *bufio.Scanner) []Card {
 
 		// get numbers
 		newCard := Card{
-			common.StringToInts(&splits[0]),
-			common.StringToInts(&splits[1]),
+			common.StringToInts(&splits[0], " "),
+			common.StringToInts(&splits[1], " "),
 		}
 		cards = append(cards, newCard)
 	}
@@ -54,7 +53,6 @@ func Part1(filename string) int {
 		sum += similar
 	}
 
-	fmt.Printf("Sum = %d\n", sum)
 	return sum
 }
 
@@ -89,6 +87,5 @@ func Part2(filename string) int {
 		sum += v
 	}
 
-	fmt.Printf("Sum = %d\n", sum)
 	return sum
 }

@@ -3,7 +3,6 @@ package day3
 import (
 	"aoc/2023/common"
 	"bufio"
-	"fmt"
 	"strconv"
 	"unicode"
 )
@@ -85,7 +84,6 @@ func Part1(filename string) int {
 			sum += num.value
 		}
 	}
-	fmt.Printf("Sum = %d\n", sum)
 
 	return sum
 }
@@ -141,6 +139,5 @@ func Part2(filename string) int {
 
 	}
 
-	fmt.Printf("Sum = %d\n", sum)
 	return sum
 }

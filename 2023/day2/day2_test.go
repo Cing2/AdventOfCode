@@ -6,18 +6,19 @@ import (
 )
 
 func TestPart1(t *testing.T) {
-	var sum = Part1("../samples/day2.txt")
+	var result = Part1("../samples/day2.txt")
 	var expected = 8
-	if sum != expected {
-		t.Errorf("Wrong output %d != %d", expected, sum)
+	fmt.Println("Result: ", result)
+	if result != expected {
+		t.Errorf("Wrong output %d != %d", expected, result)
 	}
 }
 
 func TestPart2(t *testing.T) {
-	var sum = Part2("../samples/day2.txt")
-	fmt.Print(sum)
+	var result = Part2("../samples/day2.txt")
 	var expected = 2286
-	if sum != expected {
-		t.Errorf("Wrong output %d != %d", expected, sum)
+	fmt.Println("Result: ", result)
+	if result != expected {
+		t.Errorf("Wrong output %d != %d", expected, result)
 	}
 }
