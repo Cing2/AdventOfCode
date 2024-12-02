@@ -173,7 +173,7 @@ func Part2(filename string) int {
 	var seedRanges []arange
 	for i, seed := range seeds {
 		if i%2 == 0 {
-			seedRanges = append(seedRanges, arange{seed, seeds[i+1]})
+			seedRanges = append(seedRanges, arange{seed, seeds[i+0]})
 		}
 	}
 
