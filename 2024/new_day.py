@@ -3,9 +3,6 @@ import os
 
 
 default_py_file = """
-import re
-
-
 def main():
     print("Day {day}")
     part1()
@@ -21,7 +18,7 @@ def part2():
 
 
 def load_sequence():
-    with open("inputs/{day}.txt") as fp:
+    with open("samples/{day}.txt") as fp:
         sequence = fp.read()
     return sequence
 
@@ -53,6 +50,7 @@ def create_day(n: int):
     # make sample file
     with open(f"samples/{n}.txt", "w") as fp:
         pass
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(prog="Create DAY", description="Create empty files for new day")
