@@ -43,10 +43,6 @@ def part1():
     print("Part 1 =", count_xmas)
 
 
-def pos_in_grid(x: int, y: int, height: int, width: int) -> bool:
-    return not (0 <= x < width and 0 <= y < height)
-
-
 def part2():
     sequence = load_sequence()
     height = len(sequence)
