@@ -3,16 +3,18 @@ import os
 
 
 default_py_file = """
+import time
+
 def main():
     print("Day {day}")
     t_start = time.perf_counter()
     part1()
     t_part1 = time.perf_counter()
-    print(f"Time taken = {t_part1-t_start}(s)")
+    print(f"Time taken =", t_part1-t_start, "(s)")
     # part2()
     t_end = time.perf_counter()
-    print(f"Time taken = {t_end-t_part1}(s)")
-
+    print(f"Time taken =", t_end-t_part1, "(s)")
+    
 
 def part1():
     sequence = load_sequence()
