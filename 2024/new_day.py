@@ -17,14 +17,14 @@ def main():
     
 
 def part1():
-    sequence = load_sequence()
+    sequence = load_input()
     
 
 def part2():
-    sequence = load_sequence()
+    sequence = load_input()
 
 
-def load_sequence():
+def load_input():
     with open("samples/{day}.txt") as fp:
         sequence = fp.read()
     return sequence
