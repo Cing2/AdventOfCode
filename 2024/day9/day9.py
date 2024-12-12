@@ -8,7 +8,7 @@ def main():
     part1()
     t_part1 = time.perf_counter()
     print(f"Time taken =", t_part1 - t_start, "(s)")
-    part2_new()
+    part2()
     t_end = time.perf_counter()
     print(f"Time taken =", t_end - t_part1, "(s)")
 
@@ -60,107 +60,47 @@ def part1():
 
 def part2():
     sequence = load_sequence()
-    sequence = [int(x) for x in sequence]
-    # get mapping of size to files
-    map_size_file = [[] for _ in range(9)]
-    for i, v in enumerate(sequence):
-        if i % 2 == 0:
-            # file block
-            length_file = int(v)
-            id_file = i // 2
-            map_size_file[length_file - 1].append((i, id_file))
-
-    print(map_size_file)
-
-    # contains the index of files that were move
-    files_done = set()
-    # calculate checksum in one go
-    checksum = 0
-    counter_full_file = 0
-    for i, file_length in enumerate(sequence):
-        # check if file was already moved, then skip
-        if i in files_done:
-            continue
-        if i % 2 == 0:
-            # length of file block
-            id_file = i // 2
-            for _ in range(file_length):
-                # checksum is the index of current position in the extended file and the index(ID) in the compressed file
-                print(f"Adding {counter_full_file} * {id_file}", counter_full_file * id_file)
-                checksum += counter_full_file * id_file
-                counter_full_file += 1
-            # remove file from mapping
-            for k, file in enumerate(map_size_file[file_length - 1]):
-                if file[0] == i:
-                    del map_size_file[file_length - 1][k]
-
-        else:
-            # length of blank space, find file(s) to move in space
-            space_remaining = file_length
-            while space_remaining > 0:
-                for space in range(space_remaining, 0):
-                    if len(map_size_file[space - 1]) > 0:  # check if file with this much space
-                        file = map_size_file[space - 1].pop()
-                        # check if not already used
-                        if file[0] in files_done:
-                            # skip
-                            continue
-                        files_done.add(file[0])
-                        space_remaining -= space
-                        # add count to checksum
-                        for _ in range(space):
-                            print(f"Adding {counter_full_file} * {file[1]}", counter_full_file * file[1])
-                            checksum += counter_full_file * file[1]
-                            counter_full_file += 1
-                        # break loop, and search again if space remaining
-                        break
-                else:
-                    # if loop ends normally no file found to move thus skipping
-                    break
-
-    print("Part 2 = ", checksum)
-
-
-def part2_new():
-    sequence = load_sequence()
     files = []
     for i, v in enumerate(sequence):
         if int(v) == 0:
             continue
         if i % 2 == 0:
             # id of file is i//2
-            files.append([i // 2, int(v)])
+            files.append([i // 2, int(v), False])
         else:
             # -1 for empty space
-            files.append([-1, int(v)])
-    print(files)
+            files.append([-1, int(v), False])
     # iteratively move files
-    idx_file = len(files) - 1
-    while idx_file > 0:
-        print(files[idx_file])
-        if files[idx_file][0] == -1:
-            print("skipping")
-            idx_file -= 1
+    i = len(files) - 1
+    while i > 0:
+        # check if empty space or already moved
+        if files[i][0] == -1 or files[i][2] == True:
+            i -= 1
             continue
 
-        for j in range(idx_file - 1):
+        for j in range(i - 1):
             if files[j][0] == -1:
                 # check if file can be moved
-                if files[j][1] == files[idx_file][1]:
+                if files[j][1] == files[i][1]:
                     # same size substitute
-                    move_file = files.pop(idx_file)
-                    print(f"moving file {move_file} to {j}")
-                    files[j][0] = move_file[0]
+                    # change emtpy to file
+                    files[j][0] = files[i][0]
+                    files[j][2] = True  # indicate that files is already moved
+                    # make file empty
+                    files[i][0] = -1
                     break
-                elif files[j][1] > files[idx_file][1]:
+                elif files[j][1] > files[i][1]:
                     # file moving is smaller
-                    move_file = files.pop(idx_file)
-                    print(f"moving file {move_file} to {j}")
-                    files[j][1] -= move_file[1]
-                    files.insert(j, move_file)
+                    # print(f"moving file {move_file} to {j}")
+                    # reduce empty space
+                    files[j][1] -= files[i][1]
+                    # insert new file before
+                    files.insert(j, [files[i][0], files[i][1], True])
+                    # change original file to empty
+                    files[i + 1][0] = -1
                     break
-                    # idx_file +=1
-        idx_file -= 1
+
+        i -= 1
 
     # calculate hash of combination
     idx_counter = 0
@@ -175,11 +115,9 @@ def part2_new():
 
     print("part 2 =", checksum)
 
-    print(files)
-
 
 def load_sequence():
-    with open("samples/9.txt") as fp:
+    with open("inputs/9.txt") as fp:
         sequence = fp.read()
     return sequence
 
