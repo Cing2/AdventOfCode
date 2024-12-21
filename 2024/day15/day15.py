@@ -101,7 +101,7 @@ def op2Dir(op: str) -> Tuple[int, int]:
 
 
 def print_grid(grid, rpos=None):
-    if rpos != None:
+    if rpos is not None:
         copy_grid = copy.deepcopy(grid)
         copy_grid[rpos[1]][rpos[0]] = "@"
         grid = copy_grid
@@ -175,7 +175,6 @@ def operationLeftRight(grid, op, robot):
 def operationUpDown(grid, op, robot):
     assert op == "^" or op == "v"
     dir = op2Dir(op)
-    nr_boxes = 0
     canMove = True
     npos = robot
     # first follow direction forward
@@ -184,7 +183,7 @@ def operationUpDown(grid, op, robot):
     to_check.append(robot)
     while len(to_check) > 0:
         npos = to_check.popleft()
-        npos = (npos[0], npos[1]+dir[1])
+        npos = (npos[0], npos[1] + dir[1])
         # check if pos is occupied
         vpos = grid[npos[1]][npos[0]]
         if vpos == ".":
@@ -218,7 +217,7 @@ def operationUpDown(grid, op, robot):
             grid[box[0][1]][box[0][0]] = "."
             grid[box[1][1]][box[1][0]] = "."
 
-        robot = (robot[0] , robot[1] + dir[1])
+        robot = (robot[0], robot[1] + dir[1])
     return robot
 
 
