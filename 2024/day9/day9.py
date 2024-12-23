@@ -64,12 +64,13 @@ def part2():
     for i, v in enumerate(sequence):
         if int(v) == 0:
             continue
-        if i % 2 == 0:
+        if i % 2 == 0:  # if uneven is a file
             # id of file is i//2
             files.append([i // 2, int(v), False])
         else:
             # -1 for empty space
             files.append([-1, int(v), False])
+
     # iteratively move files
     i = len(files) - 1
     while i > 0:
@@ -78,7 +79,7 @@ def part2():
             i -= 1
             continue
 
-        for j in range(i - 1):
+        for j in range(i):
             if files[j][0] == -1:
                 # check if file can be moved
                 if files[j][1] == files[i][1]:
@@ -91,13 +92,14 @@ def part2():
                     break
                 elif files[j][1] > files[i][1]:
                     # file moving is smaller
-                    # print(f"moving file {move_file} to {j}")
                     # reduce empty space
                     files[j][1] -= files[i][1]
+                    # files[j][2] = True
                     # insert new file before
                     files.insert(j, [files[i][0], files[i][1], True])
+                    i += 1
                     # change original file to empty
-                    files[i + 1][0] = -1
+                    files[i][0] = -1
                     break
 
         i -= 1
@@ -118,7 +120,7 @@ def part2():
 
 def load_sequence():
     with open("inputs/9.txt") as fp:
-        sequence = fp.read()
+        sequence = fp.read().strip()
     return sequence
 
 
