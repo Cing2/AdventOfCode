@@ -47,11 +47,39 @@ def manhatten_dist(pos: Position, end: Position) -> int:
     return abs(pos.x - end.x) + abs(pos.y - end.y)
 
 
+def distance_to_end(grid, end: Position) -> dict[Position, int]:
+    # do bfs from end to get distance from each node
+    queue = deque()
+    visited = set()
+    start = Node(Dim(end, 0), 0)
+    queue.append(start)
+    visited.add(start.dim.pos)
+    dist_to_end = {}
+
+    while len(queue) > 0:
+        node = queue.popleft()
+
+        dist_to_end[node.dim.pos] = node.cost
+
+        for neigh in get_neighbors(node, grid, None):
+            if neigh.dim.pos in visited:
+                continue
+
+            queue.append(neigh)
+            visited.add(neigh.dim.pos)
+
+    # print(sorted(list(dist_to_end.items()), key=lambda x: x[1]))
+    return dist_to_end
+
+
 def part1():
     grid = load_input()
     # print(grid)
 
     start, end = find_start_end(grid)
+
+    dist_to_end = distance_to_end(grid, end)
+
     # bfs over grid with cheat option
     visited = set()
     queue = deque()
@@ -60,7 +88,6 @@ def part1():
     visited.add(start)
     cheater = deque()
     counter_ids = Counter(0)
-    min_dist_normal = dict()
     finished_cheaters = []
     min_dist_end = math.inf
 
@@ -70,19 +97,15 @@ def part1():
         else:
             node = cheater.popleft()
 
-        if node.dim.id_cheater == 0:
-            if node.dim.pos not in min_dist_normal:
-                min_dist_normal[node.dim.pos] = node.cost
-        else:
-            # cheater, check if not already to far away
-            if node.cost > min_dist_end - 100:
-                continue
+        if node.dim.id_cheater > 0 and node.dim.pos in dist_to_end:
+            # use known distance to calculate cost for cheater
+            new_node = Node(Dim(Position(0, 0), 0), node.cost + dist_to_end[node.dim.pos])
+            finished_cheaters.append(new_node)
+            continue
 
         if node.dim.pos == end:
             # at end
-            if node.dim.id_cheater > 0:
-                finished_cheaters.append(node)
-            else:
+            if node.dim.id_cheater == 0:
                 min_dist_end = node.cost
 
         # get all neighbors
@@ -91,11 +114,6 @@ def part1():
                 continue
 
             if neigh.dim.id_cheater > 0:
-                # cheater, check if position is useful, normal should not get there faster, and should be close to the end
-                if neigh.dim.pos in min_dist_normal and min_dist_normal[neigh.dim.pos] - 100 <= neigh.cost:
-                    continue
-                if (neigh.cost + manhatten_dist(neigh.dim.pos, end)) > min_dist_end:
-                    continue
                 cheater.append(neigh)
             else:
                 queue.append(neigh)
@@ -105,7 +123,7 @@ def part1():
     count_100_save = 0
     for cheater in finished_cheaters:
         diff = min_dist_end - cheater.cost
-        if diff > 100:
+        if diff >= 100:
             count_100_save += 1
 
     print("Part 1 =", count_100_save)
@@ -121,7 +139,7 @@ def get_neighbors(node: Node, grid, counter_ids: Counter) -> List[Node]:
             if grid[new_pos[1]][new_pos[0]] != "#":
                 neigbors.append(Node(Dim(new_pos, node.dim.id_cheater), node.cost + 1))
             else:
-                if node.dim.id_cheater == 0:  # not cheating, new cheater
+                if node.dim.id_cheater == 0 and counter_ids is not None:  # not cheating, new cheater
                     id_cheater = counter_ids.next_value()
                     neigbors.append(Node(Dim(new_pos, id_cheater), node.cost + 1))
 
