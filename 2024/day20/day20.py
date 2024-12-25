@@ -10,7 +10,7 @@ def main():
     # part1()
     t_part1 = time.perf_counter()
     print("Time taken =", t_part1 - t_start, "(s)")
-    part2()
+    part2(True)
     t_end = time.perf_counter()
     print("Time taken =", t_end - t_part1, "(s)")
 
@@ -137,10 +137,17 @@ def get_neighbors(node: Node, grid, counter_ids: Counter, cheat_amount: int = 1)
         new_pos = Position(node.dim.pos.x + dir[0], node.dim.pos.y + dir[1])
         if pos_in_grid(new_pos[0], new_pos[1], len(grid), len(grid[0])):
             if isinstance(node, Cheater):
-                if grid[new_pos[1]][new_pos[0]] != "#" or node.rem_steps > 0:
-                    neigbors.append(
-                        Cheater(Dim(new_pos, node.dim.id_cheater), node.cost + 1, node.start_pos, node.rem_steps - 1)
-                    )
+                if grid[new_pos[1]][new_pos[0]] == "#":
+                    if node.rem_steps > 0:
+                        neigbors.append(
+                            Cheater(
+                                Dim(new_pos, node.dim.id_cheater), node.cost + 1, node.start_pos, node.rem_steps - 1
+                            )
+                        )
+                else:
+                    # back on a track remove rem_steps
+                    # wrong
+                    neigbors.append(Cheater(Dim(new_pos, node.dim.id_cheater), node.cost + 1, node.start_pos, 0))
             else:
                 if grid[new_pos[1]][new_pos[0]] != "#":
                     neigbors.append(Node(Dim(new_pos, node.dim.id_cheater), node.cost + 1))
@@ -160,7 +167,7 @@ Cheater = namedtuple("Cheater", "dim cost start_pos rem_steps")
 
 
 def part2(test=False):
-    grid = load_input()
+    grid = load_input(test)
     start, end = find_start_end(grid)
     dist_to_end = distance_to_end(grid, end)
 
@@ -221,15 +228,18 @@ def part2(test=False):
         if diff >= min_save:
             count_saved[diff] += 1
             count_100_save += 1
-    #     if diff == 76:
-    #         print(cheater, diff)
-    # print(sorted(list(count_saved.items())))
+        if diff == 76:
+            print(cheater, diff)
+    print(sorted(list(count_saved.items())))
 
     print("Part 2 =", count_100_save)
 
 
-def load_input():
-    with open("samples/20.txt") as fp:
+def load_input(test):
+    file = "inputs/20.txt"
+    if test:
+        file = "samples/20.txt"
+    with open(file) as fp:
         grid = []
         for line in fp.readlines():
             grid.append(line.strip())
