@@ -54,10 +54,10 @@ def run_program(program, registers) -> str:
 
         if opcode == 0:
             # division of A / 2^combo
-            registers[0] = registers[0] // (2**combo_op)
+            registers[0] = int(registers[0] // (2**combo_op))
         elif opcode == 1:
             # B xor op
-            registers[1] ^= operand
+            registers[1] = int(registers[1] ^ operand)
         elif opcode == 2:
             # combo_op % 8
             registers[1] = combo_op % 8
@@ -138,45 +138,64 @@ def binary_search_bound(program: List[int], low: int, high: int, index_to_search
 def search_for_index_program(program: List[int], low: int, high: int, index_to_search: int) -> Tuple[int, int]:
     """Binary search program in range for output at index be same as program, outputs new range"""
     need_number = program[index_to_search]
+    # print(f"search in {low, high}, at {index_to_search} for {need_number}")
 
-    # range split into 7 regions, every region has a number, find bounds of that regions
+    # range split into n regions, every region has a number, find bounds of that regions
+    nr_regions = 12
+    length_reg = (high - low) // nr_regions
     regions_number = []
-    regions_mid_points = []
-    nr_regions = 8
-    length_reg = (high - low) / nr_regions
-    needed_region = -1
-    for i in range(nr_regions):
-        A = (length_reg / 2) + length_reg * i
-        regions_mid_points.append(A)
+    regions = [low + length_reg * i for i in range(nr_regions)]
+    regions.append(high)
+    index_needed_reg = -1
+    for i, A in enumerate(regions):
         output = run_program(program, [A, 0, 0])
         regions_number.append(output[index_to_search])
-        if regions_number[i - 1] == regions_number[i]:
-            print("region with same bound, error")
-        if output[index_to_search] == need_number:
-            needed_region = i
+        if output[index_to_search] == need_number and index_needed_reg == -1:
+            index_needed_reg = i
 
-    if needed_region == -1:
-        raise ValueError("Could not find region")
+    if index_needed_reg == -1:
+        # raise ValueError("Could not find region")
+        # print(f"could not find region, {index_to_search}")
+        return []
 
-    # binary search bounds of the region
-    if needed_region > 0:
-        low = binary_search_bound(
-            program,
-            regions_mid_points[needed_region[i - 1]],
-            regions_mid_points[needed_region[i + 1]],
-            index_to_search,
-            searchLower=True,
+    all_regions = []
+    current_regions = []
+    for i, v in enumerate(regions_number):
+        if v != need_number:
+            if len(current_regions) > 0:
+                all_regions.append(current_regions)
+                current_regions = []
+        else:
+            # in a region
+            current_regions.append(i)
+
+    region_bounds = []
+    for reg in all_regions:
+        # binary search bounds of the region
+        new_bound = []
+        new_bound.append(
+            binary_search_bound(
+                program,
+                regions[max(min(reg) - 1, 0)],
+                regions[min(reg)],
+                index_to_search,
+                searchLower=True,
+            )
         )
-    if needed_region < (nr_regions - 1):
-        high = binary_search_bound(
-            program,
-            regions_mid_points[needed_region[i - 1]],
-            regions_mid_points[needed_region[i + 1]],
-            index_to_search,
-            searchLower=False,
+        new_bound.append(
+            binary_search_bound(
+                program,
+                regions[max(reg)],
+                regions[min(max(reg) + 1, len(regions) - 1)],
+                index_to_search,
+                searchLower=False,
+            )
         )
+        region_bounds.append(new_bound)
 
-    return low, high
+    # print(f"Found regions {region_bounds}")
+
+    return region_bounds
 
 
 def part2():
@@ -206,17 +225,28 @@ def part2():
     highest = binary_search_length(program, high, above, searchLower=False)
     print("searching over", lowest, highest, f"Diff: {highest-lowest}")
 
-    new_bounds = search_for_index_program(program, lowest, highest, len(program) - 1)
-    print("new bounds", new_bounds)
+    bounds = find_all_bounds(program, [[lowest, highest]], index_to_search=len(program) - 1)
+    # print(bounds)
 
-    # for A in range(lowest, highest + 1):
-    #     output = run_program(program, [A, 0, 0])
-    #     print("A: A = ", output)
-    #     if A > lowest + 100:
-    #         break
-    #     if program == output:
-    #         print("found it", A)
-    #         break
+    for A in range(bounds[0][0], bounds[0][1] + 1):
+        output = run_program(program, [A, 0, 0])
+        if program == output:
+            print("found it", A)
+            break
+
+
+def find_all_bounds(program, bounds, index_to_search):
+    if len(bounds) == 0:
+        return
+
+    for bound in bounds:
+        if bound[1] - bound[0] < 500:
+            return bounds
+        new_bounds = search_for_index_program(program, bound[0], bound[1], index_to_search)
+
+        newer = find_all_bounds(program, new_bounds, index_to_search - 1)
+        if newer:
+            return newer
 
 
 def load_input():
