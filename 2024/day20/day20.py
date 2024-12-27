@@ -137,24 +137,26 @@ def get_neighbors(node: Node, grid, counter_ids: Counter, cheat_amount: int = 1)
         new_pos = Position(node.dim.pos.x + dir[0], node.dim.pos.y + dir[1])
         if pos_in_grid(new_pos[0], new_pos[1], len(grid), len(grid[0])):
             if isinstance(node, Cheater):
-                if grid[new_pos[1]][new_pos[0]] == "#":
-                    if node.rem_steps > 0:
-                        neigbors.append(
-                            Cheater(
-                                Dim(new_pos, node.dim.id_cheater), node.cost + 1, node.start_pos, node.rem_steps - 1
-                            )
+                if grid[new_pos[1]][new_pos[0]] != "#" or node.rem_steps > 0:
+                    is_prev_block = grid[node.dim.pos.x][node.dim.pos.y] == "#"
+                    neigbors.append(
+                        Cheater(
+                            Dim(new_pos, node.dim.id_cheater),
+                            node.cost + 1,
+                            node.start_pos,
+                            is_prev_block,
+                            node.rem_steps - 1,
                         )
-                else:
-                    # back on a track remove rem_steps
-                    # wrong
-                    neigbors.append(Cheater(Dim(new_pos, node.dim.id_cheater), node.cost + 1, node.start_pos, 0))
+                    )
             else:
                 if grid[new_pos[1]][new_pos[0]] != "#":
                     neigbors.append(Node(Dim(new_pos, node.dim.id_cheater), node.cost + 1))
                 else:
                     if node.dim.id_cheater == 0 and counter_ids is not None:  # not cheating, new cheater
                         id_cheater = counter_ids.next_value()
-                        neigbors.append(Cheater(Dim(new_pos, id_cheater), node.cost + 1, new_pos, cheat_amount))
+                        neigbors.append(
+                            Cheater(Dim(new_pos, id_cheater), node.cost + 1, node.dim.pos, False, cheat_amount)
+                        )
 
     return neigbors
 
@@ -163,7 +165,7 @@ def pos_in_grid(x: int, y: int, height: int, width: int) -> bool:
     return 0 <= x < width and 0 <= y < height
 
 
-Cheater = namedtuple("Cheater", "dim cost start_pos rem_steps")
+Cheater = namedtuple("Cheater", "dim cost start_pos prev_block rem_steps")
 
 
 def part2(test=False):
@@ -171,10 +173,11 @@ def part2(test=False):
     start, end = find_start_end(grid)
     dist_to_end = distance_to_end(grid, end)
 
-    allowed_cheat = 20
+    allowed_cheat = 19
     min_save = 100
     if test:
         min_save = 50
+
     # bfs over grid with cheat option
     visited = set()
     queue = deque()
@@ -185,12 +188,13 @@ def part2(test=False):
     counter_ids = Counter(0)
     finished_cheaters = {}
     min_dist_end = math.inf
+    print(32+31+29+39+25+23+20+19+12+14+12+22+4+3)
 
     while len(queue) > 0 or len(cheater) > 0:
         if len(queue) > 0:
-            node = queue.popleft()
+            node: Node = queue.popleft()
         else:
-            node = cheater.popleft()
+            node: Cheater = cheater.popleft()
 
         if node.dim.id_cheater > 0 and node.dim.pos in dist_to_end:
             # use known distance to calculate cost for cheater
@@ -200,8 +204,8 @@ def part2(test=False):
             else:
                 finished_cheaters[key] = node.cost + dist_to_end[node.dim.pos]
             # continue if still possible to cheat
-            if node.rem_steps == 0:
-                continue
+            # if node.rem_steps == 0:
+            #     continue
 
         if node.dim.pos == end:
             # at end
