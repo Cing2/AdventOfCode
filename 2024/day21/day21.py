@@ -13,15 +13,15 @@ def main():
     t_end = time.perf_counter()
     print("Time taken =", t_end - t_part1, "(s)")
 
-
+#   0   1   2
 # +---+---+---+
-# | 7 | 8 | 9 |
+# | 7 | 8 | 9 | 0
 # +---+---+---+
-# | 4 | 5 | 6 |
+# | 4 | 5 | 6 | 1
 # +---+---+---+
-# | 1 | 2 | 3 |
+# | 1 | 2 | 3 | 2
 # +---+---+---+
-#     | 0 | A |
+#     | 0 | A | 3
 #     +---+---+
 
 Point = namedtuple("point", "x, y")
@@ -34,11 +34,12 @@ numeric_position = {
     "6": Point(2, 1),
     "1": Point(0, 2),
     "2": Point(1, 2),
+    "3": Point(2, 2),
     "0": Point(1, 3),
-    "8": Point(2, 3),
+    "A": Point(2, 3),
 }
 
-directional_position = {
+direct_to_position = {
     "^": Point(1, 0),
     "A": Point(2, 0),
     "<": Point(0, 1),
@@ -46,29 +47,62 @@ directional_position = {
     ">": Point(2, 1),
 }
 
+pos_to_direct = {v: k for v, k in direct_to_position.items()}
+pos_to_numeric = {v: k for v, k in direct_to_position.items()}
 
-@cache
-def numeric_keyboard(on: str, to: str) -> str:
-    if to == on:
-        return ""
-    pos_on = numeric_position[on]
-    pos_to = numeric_position[to]
-    # going up
-    if pos_to.y < pos_on.y:
-        return "^" + numeric_keyboard(Point(pos_on.x, pos_on.y - 1), pos_to)
+
+def move_keyboards(pos_on: Point, pos_to: Point) -> str:
+    if pos_to == pos_on:
+        return "A"
     # to right
     if pos_to.x > pos_on.x:
-        return ">" + numeric_keyboard(Point(pos_on.x + 1, pos_on.y), pos_to)
-    # to left
-    if pos_to.x < pos_on.x:
-        return "<" + numeric_keyboard(Point(pos_on.x - 1, pos_on.y), pos_to)
+        return ">" + move_keyboards(Point(pos_on.x + 1, pos_on.y), pos_to)
+    # going up
+    if pos_to.y < pos_on.y:
+        return "^" + move_keyboards(Point(pos_on.x, pos_on.y - 1), pos_to)
     # down
     if pos_to.y > pos_on.y:
-        return "^" + numeric_keyboard(Point(pos_on.x, pos_on.y + 1), pos_to)
+        return "v" + move_keyboards(Point(pos_on.x, pos_on.y + 1), pos_to)
+    # to left
+    if pos_to.x < pos_on.x:
+        return "<" + move_keyboards(Point(pos_on.x - 1, pos_on.y), pos_to)
+
+
+def recurse_boards(values: str, boards: list) -> str:
+    on_square = "A"
+    sum_motion = ""
+    keyboard = direct_to_position
+    if not boards[0]:
+        keyboard = numeric_position
+    pos_on = keyboard[on_square]
+
+    for value in values:
+        pos_to = keyboard[value]
+        motion = move_keyboards(pos_on, pos_to)
+        print(f'{len(boards)} Working on ', motion)
+        pos_on = keyboard[value]
+        if len(boards) > 1:
+            sum_motion += recurse_boards(motion, boards[1:])
+        else:
+            sum_motion += motion
+    print(len(boards), values, sum_motion)
+
+    return sum_motion
 
 
 def part1():
     codes = load_input()
+    boards = [False, True, True]
+
+    sum = 0
+    for code in codes[-1:]:
+        answer = recurse_boards(code, [False, True, True])
+        # number
+        num = int(code.strip("A"))
+        sum += num * len(answer)
+        print(code, answer, len(answer), num)
+
+    print("Part 1 =", sum)
 
 
 def part2():
